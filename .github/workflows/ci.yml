@@ -19,6 +19,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      runner:
+        description: "GitHub runner label to execute the job on"
+        required: false
+        default: arc-runners-org-nvidia-ai-bp-2-gpu
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -31,7 +37,7 @@ env:
 
 jobs:
   deploy-and-test:
-    runs-on: arc-runner-set-oke-org-poc-2-gpu
+    runs-on: ${{ inputs.runner || 'arc-runners-org-nvidia-ai-bp-2-gpu' }}
     timeout-minutes: 480
     env:
       NVIDIA_API_KEY: ${{ secrets.NGC_API_KEY }}
